@@ -1,4 +1,10 @@
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Leaf,
@@ -6,42 +12,43 @@ import {
   Sparkles,
   Trash2,
   ArrowUpRight,
-  ShieldCheck,
-  BarChart3,
-  Globe2,
+  CalendarCheck,
+  MapPin,
+  CheckCircle2,
 } from 'lucide-react-native';
 
 import { colors, spacing, radii, typography, shadows } from '@/constants/theme';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
 const HIGHLIGHTS = [
   {
     icon: Trash2,
-    tag: 'Segregation',
-    title: 'Smart Sorting',
-    desc: 'Instant visual classification for organic, dry & hazardous domestic waste.',
+    tag: 'Categorization',
+    title: 'Waste Segregation Guide',
+    desc: 'Clear rules and practical guides to separate wet, dry, recyclable, and domestic hazardous waste correctly.',
     accent: colors.lime,
   },
   {
-    icon: BarChart3,
-    tag: 'Household Metrics',
-    title: 'Track & Reduce',
-    desc: 'Measure disposal habits, prevent landfill overflow, and unlock weekly badges.',
+    icon: CalendarCheck,
+    tag: 'Routines',
+    title: 'Collection Schedules',
+    desc: 'Stay organized with household pickup reminders, collection days, and local municipal timings.',
     accent: colors.sage,
   },
   {
-    icon: Globe2,
-    tag: 'Circular Living',
-    title: 'Eco Loop Community',
-    desc: 'Connect with verified municipal pick-ups and community composting hubs.',
+    icon: MapPin,
+    tag: 'Local Facilities',
+    title: 'Drop-off & Composting',
+    desc: 'Find verified local recycling drop-offs, scrap collectors, and guidance for managing kitchen compost at home.',
     accent: colors.warmSand,
   },
 ];
 
 export default function HomeScreen() {
+  const { width } = useWindowDimensions();
+  const isCompact = width < 360;
+
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       <ScrollView
@@ -49,57 +56,61 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Top Navigation Bar */}
-        <View style={styles.navBar}>
+        {/* Top Navigation Bar - Responsive & robust on small screens */}
+        <View style={[styles.navBar, isCompact && styles.navBarCompact]}>
           <View style={styles.brandContainer}>
             <View style={styles.brandIconSurface}>
-              <Recycle size={20} color={colors.lime} strokeWidth={2.4} />
+              <Recycle size={18} color={colors.lime} strokeWidth={2.4} />
             </View>
-            <View>
-              <Text style={styles.brandTitle}>CleanLoop</Text>
-              <Text style={styles.brandSubtitle}>DOMESTIC WASTE INTELLIGENCE</Text>
+            <View style={styles.brandTextGroup}>
+              <Text style={styles.brandTitle} numberOfLines={1}>CleanLoop</Text>
+              <Text style={styles.brandSubtitle} numberOfLines={1}>
+                {isCompact ? 'DOMESTIC WASTE' : 'DOMESTIC WASTE GUIDE'}
+              </Text>
             </View>
           </View>
 
           <View style={styles.statusPill}>
             <View style={styles.statusDot} />
-            <Text style={styles.statusText}>Active Cycle</Text>
+            <Text style={styles.statusText} numberOfLines={1}>Active Cycle</Text>
           </View>
         </View>
 
-        {/* Hero Arch Showcase Card (Inspired by reference visual structure) */}
+        {/* Hero Arch Showcase Card */}
         <View style={styles.heroOuter}>
-          <View style={styles.heroCard}>
-            {/* Ambient Leaf/Eco Background Graphic Elements */}
+          <View style={[styles.heroCard, isCompact && styles.heroCardCompact]}>
+            {/* Ambient Background Graphic Accent */}
             <View style={styles.heroBackdropAccent} />
 
             <View style={styles.heroBadgeRow}>
               <View style={styles.pillBadge}>
                 <Sparkles size={12} color={colors.lime} />
-                <Text style={styles.pillBadgeText}>Sustainable Living Made Effortless</Text>
+                <Text style={styles.pillBadgeText}>Mindful Domestic Living</Text>
               </View>
             </View>
 
-            <Text style={styles.heroHeadline}>
+            <Text style={[styles.heroHeadline, isCompact && styles.heroHeadlineCompact]}>
               Waste less.{'\n'}
-              <Text style={styles.heroHeadlineHighlight}>Restore more.</Text>
+              <Text style={styles.heroHeadlineHighlight}>Sort better.</Text>
             </Text>
 
             <Text style={styles.heroDescription}>
-              CleanLoop guides your household through intelligent waste segregation,
-              preventing contamination and turning daily discards into renewable impact.
+              CleanLoop helps households build practical waste management habits through
+              clear segregation steps, collection schedules, and local disposal guidance.
             </Text>
 
-            {/* Quick Impact Mini-Card inside Hero */}
+            {/* Practical Household Guidance Snippet */}
             <View style={styles.impactSnippet}>
               <View style={styles.impactIconBubble}>
-                <Leaf size={18} color={colors.lime} strokeWidth={2.4} />
+                <Leaf size={16} color={colors.lime} strokeWidth={2.4} />
               </View>
               <View style={styles.impactTextGroup}>
-                <Text style={styles.impactTitle}>Zero-Waste Goal</Text>
-                <Text style={styles.impactSubtitle}>Up to 78% domestic diversion possible</Text>
+                <Text style={styles.impactTitle}>Responsible Segregation</Text>
+                <Text style={styles.impactSubtitle} numberOfLines={2}>
+                  Separate organic, recyclable & domestic hazardous waste
+                </Text>
               </View>
-              <ShieldCheck size={18} color={colors.sage} />
+              <CheckCircle2 size={16} color={colors.sage} />
             </View>
           </View>
         </View>
@@ -107,7 +118,7 @@ export default function HomeScreen() {
         {/* Section Headline */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionOverline}>CORE CAPABILITIES</Text>
-          <Text style={styles.sectionHeading}>Engineered for conscious homes</Text>
+          <Text style={styles.sectionHeading}>Built for everyday home management</Text>
         </View>
 
         {/* Feature Cards with refined surfaces and micro-details */}
@@ -118,7 +129,7 @@ export default function HomeScreen() {
               <Card key={index} variant="elevated" style={styles.featureCard}>
                 <View style={styles.cardHeader}>
                   <View style={[styles.iconWrapper, { backgroundColor: item.accent + '22' }]}>
-                    <Icon size={22} color={colors.pineGreen} strokeWidth={2.2} />
+                    <Icon size={20} color={colors.pineGreen} strokeWidth={2.2} />
                   </View>
                   <View style={styles.cardTagPill}>
                     <Text style={styles.cardTagText}>{item.tag}</Text>
@@ -175,55 +186,70 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.sm,
+    paddingTop: spacing.xs + 2,
     paddingBottom: spacing.md,
+    gap: spacing.sm,
+  },
+  navBarCompact: {
+    paddingHorizontal: spacing.md,
   },
   brandContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    minWidth: 0,
+    marginRight: spacing.xs,
   },
   brandIconSurface: {
-    width: 38,
-    height: 38,
+    width: 36,
+    height: 36,
     borderRadius: radii.md,
     backgroundColor: colors.deepForest,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: spacing.sm + 2,
+    marginRight: spacing.sm,
+    flexShrink: 0,
     ...shadows.sm,
   },
+  brandTextGroup: {
+    flex: 1,
+    minWidth: 0,
+  },
   brandTitle: {
-    ...typography.size.lg,
+    ...typography.size.md,
     fontWeight: typography.weight.bold,
     color: colors.deepForest,
-    letterSpacing: -0.4,
+    letterSpacing: -0.3,
   },
   brandSubtitle: {
-    ...typography.size.xs,
+    fontSize: 10,
+    lineHeight: 13,
     fontWeight: typography.weight.semibold,
     color: colors.moss,
-    letterSpacing: 0.8,
+    letterSpacing: 0.6,
   },
   statusPill: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.surface,
-    paddingHorizontal: spacing.sm + 4,
-    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.sm + 2,
+    paddingVertical: spacing.xs + 1,
     borderRadius: radii.full,
     borderWidth: 1,
     borderColor: colors.borderSubtle,
+    flexShrink: 0,
     ...shadows.sm,
   },
   statusDot: {
-    width: 7,
-    height: 7,
+    width: 6,
+    height: 6,
     borderRadius: radii.full,
     backgroundColor: colors.lime,
     marginRight: spacing.xs + 2,
   },
   statusText: {
-    ...typography.size.xs,
+    fontSize: 11,
+    lineHeight: 14,
     fontWeight: typography.weight.semibold,
     color: colors.deepForest,
   },
@@ -241,6 +267,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
     ...shadows.lg,
+  },
+  heroCardCompact: {
+    padding: spacing.lg,
+    borderRadius: radii.xl,
   },
   heroBackdropAccent: {
     position: 'absolute',
@@ -274,21 +304,25 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
   heroHeadline: {
-    ...typography.size['4xl'],
+    fontSize: 34,
+    lineHeight: 40,
     fontWeight: typography.weight.bold,
     color: '#FFFFFF',
-    letterSpacing: -1,
-    lineHeight: 44,
+    letterSpacing: -0.8,
     marginBottom: spacing.md,
+  },
+  heroHeadlineCompact: {
+    fontSize: 28,
+    lineHeight: 34,
   },
   heroHeadlineHighlight: {
     color: colors.lime,
   },
   heroDescription: {
-    ...typography.size.md,
+    ...typography.size.sm,
     color: colors.sage,
-    lineHeight: 22,
-    marginBottom: spacing.xl,
+    lineHeight: 20,
+    marginBottom: spacing.lg,
   },
   impactSnippet: {
     flexDirection: 'row',
@@ -298,27 +332,31 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: radii.lg,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 4,
+    paddingVertical: spacing.sm + 2,
   },
   impactIconBubble: {
-    width: 32,
-    height: 32,
+    width: 30,
+    height: 30,
     borderRadius: radii.full,
     backgroundColor: colors.pineGreen,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.sm + 2,
+    flexShrink: 0,
   },
   impactTextGroup: {
     flex: 1,
+    marginRight: spacing.xs,
   },
   impactTitle: {
-    ...typography.size.xs,
+    fontSize: 12,
+    lineHeight: 16,
     fontWeight: typography.weight.bold,
     color: '#FFFFFF',
   },
   impactSubtitle: {
-    ...typography.size.xs,
+    fontSize: 11,
+    lineHeight: 15,
     color: colors.sage,
   },
 
@@ -328,17 +366,18 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   sectionOverline: {
-    ...typography.size.xs,
+    fontSize: 11,
+    lineHeight: 14,
     fontWeight: typography.weight.bold,
     color: colors.moss,
     letterSpacing: 1.2,
     marginBottom: spacing.xs,
   },
   sectionHeading: {
-    ...typography.size.xl,
+    ...typography.size.lg,
     fontWeight: typography.weight.bold,
     color: colors.deepForest,
-    letterSpacing: -0.4,
+    letterSpacing: -0.3,
   },
 
   /* Features List */
@@ -362,8 +401,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   iconWrapper: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     borderRadius: radii.md,
     alignItems: 'center',
     justifyContent: 'center',
@@ -377,12 +416,13 @@ const styles = StyleSheet.create({
     borderColor: colors.borderSubtle,
   },
   cardTagText: {
-    ...typography.size.xs,
+    fontSize: 11,
+    lineHeight: 14,
     fontWeight: typography.weight.semibold,
     color: colors.moss,
   },
   cardTitle: {
-    ...typography.size.lg,
+    ...typography.size.md,
     fontWeight: typography.weight.bold,
     color: colors.deepForest,
     marginBottom: spacing.xs,
@@ -412,7 +452,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   ctaPromptTitle: {
-    ...typography.size.lg,
+    ...typography.size.md,
     fontWeight: typography.weight.bold,
     color: colors.deepForest,
     marginBottom: 4,
@@ -423,6 +463,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   primaryActionButton: {
-    height: 54,
+    height: 52,
   },
 });
